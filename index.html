@@ -10,9 +10,23 @@
     <div class="container">
         <h1>Insulation & Travel Cost Calculator</h1>
 
+        <!-- Travel Section -->
+        <h2>Travel Reimbursement Estimate</h2>
+        <label for="destination">Destination Address:</label>
+        <input type="text" id="destination" placeholder="e.g., 1600 Amphitheatre Pkwy, Mountain View, CA" style="width:100%; padding:8px; margin-bottom:10px;">
+
+        <!-- 
+        <button type="button" onclick="calculateTravelCost()">Calculate Travel Cost</button>
+        <div id="travelResult"></div>
+        -->
+
         <!-- Insulation Section -->
         <h2>Insulation Cost</h2>
         <div id="wallsContainer">
+            
+            <label for="depth-0">Insulation thickness (inches):</label>
+            <input type="number" id="depth-0" class="depth" required min="0" step="0.1">
+
             <!-- Initial wall remains the same -->
             <div class="wall-section">
                 <h2>Wall 1</h2>
@@ -22,29 +36,24 @@
                 <label for="width-0">Width (feet):</label>
                 <input type="number" id="width-0" class="width" required min="0">
 
-                <label for="depth-0">Thickness (inches):</label>
-                <input type="number" id="depth-0" class="depth" required min="0" step="0.1">
-
+                <!--
                 <label for="type-0">Insulation Type:</label>
                 <select id="type-0" class="type">
                     <option value="5">Fiberglass ($5/cu ft)</option>
                     <option value="7">Foam ($7/cu ft)</option>
                     <option value="10">Cellulose ($10/cu ft)</option>
                 </select>
+                -->
+
                 <button type="button" class="remove-wall" onclick="removeWall(this)">Remove Wall</button>
             </div>
         </div>
         <button type="button" id="addWall">Add Wall</button>
-        <button type="button" onclick="calculateCost()">Calculate Insulation Total</button>
-        <div id="insulationResult"></div>
-
-        <!-- New Travel Section -->
-        <h2>Travel Reimbursement Estimate</h2>
-        <label for="destination">Destination Address:</label>
-        <input type="text" id="destination" placeholder="e.g., 1600 Amphitheatre Pkwy, Mountain View, CA" style="width:100%; padding:8px; margin-bottom:10px;">
-
-        <button type="button" onclick="calculateTravelCost()">Calculate Travel Cost</button>
+        <button type="button" onclick="calculateCost()">Calculate Travel and Insulation Total</button>
+        <!--<div id="insulationResult"></div>    -->
         <div id="travelResult"></div>
+        <div id="totalResult"></div>
+
     </div>
 
     <!-- Load Google Maps JS API – replace YOUR_API_KEY -->

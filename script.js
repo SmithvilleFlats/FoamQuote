@@ -12,15 +12,6 @@ function addWall() {
         <label for="width-${wallCount}">Width (feet):</label>
         <input type="number" id="width-${wallCount}" class="width" required min="0">
 
-        <label for="depth-${wallCount}">Thickness (inches):</label>
-        <input type="number" id="depth-${wallCount}" class="depth" required min="0" step="0.1">
-
-        <label for="type-${wallCount}">Insulation Type:</label>
-        <select id="type-${wallCount}" class="type">
-            <option value="5">Fiberglass ($5/cu ft)</option>
-            <option value="7">Foam ($7/cu ft)</option>
-            <option value="10">Cellulose ($10/cu ft)</option>
-        </select>
         <button type="button" class="remove-wall" onclick="removeWall(this)">Remove Wall</button>
     `;
     wallsContainer.appendChild(newWall);
@@ -46,30 +37,44 @@ function calculateCost() {
     const depths = document.querySelectorAll('.depth');
     const types = document.querySelectorAll('.type');
 
+    let pricePerCuFt = 10; //<-- !!!Update this value to reflect actual cost!!!
+
+    let depth = parseFloat(depths[0].value);//should only be one value
+    let totalSqrFt = 0;
     let totalVolume = 0;
     let totalCost = 0;
     let valid = true;
 
+    if (isNaN(depth) || depth <= 0){//check for valid depth value
+        valid = false;
+    }
+
+    //Calculate total square footage
     for (let i = 0; i < heights.length; i++) {
         const height = parseFloat(heights[i].value);
         const width = parseFloat(widths[i].value);
-        const depth = parseFloat(depths[i].value);
-        const pricePerCuFt = parseFloat(types[i].value);
 
-        if (isNaN(height) || isNaN(width) || isNaN(depth) || height <= 0 || width <= 0 || depth <= 0) {
+        if (isNaN(height) || isNaN(width) ||  height <= 0 || width <= 0 ) {
             valid = false;
             break;
         }
 
-        const depthInFeet = depth / 12;
-        const volume = height * width * depthInFeet;
-        const cost = volume * pricePerCuFt;
+        const sqrFt = height * width;
 
-        totalVolume += volume;
-        totalCost += cost;
+        totalSqrFt += sqrFt;
     }
 
-    const resultDiv = document.getElementById('insulationResult');
+    //Calclulate total volume and cost
+    const depthInFeet = depth / 12;
+    const volume = totalSqrFt * depthInFeet;
+    const cost = volume * pricePerCuFt;
+
+    totalVolume += volume;
+    totalCost += cost;
+
+    calculateTravelCost();
+
+    const resultDiv = document.getElementById('totalResult');
     if (!valid) {
         resultDiv.innerHTML = 'Please enter valid positive numbers for all walls.';
     } else {
@@ -112,7 +117,7 @@ function calculateTravelCost() {
         distanceService = new google.maps.DistanceMatrixService();
     }
 
-    const HOME = '1600 Pennsylvania Ave NW, Washington, DC 20500';
+    const HOME = '148 Martin Rd, Greene, NY 13778';
     const IRS_RATE = 0.725; // dollars per mile (72.5 cents, 2026 rate)
 
     distanceService.getDistanceMatrix(
